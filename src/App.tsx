@@ -335,7 +335,7 @@ function App() {
   onMouseMove={handleSceneMouseMove}
 >
 
-<header className="text-center py-6 bg-gradient-to-b from-slate-800 to-slate-900 shadow-md rounded-t-xl border-b border-gray-700/50">
+<header className="text-center py-6 bg-gradient-to-b from-slate-800 to-slate-900 shadow-md rounded-t-xl">
   <h1 className="text-4xl font-bold bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2">
     Cerebras x Cline: $5,000 Vibe Coder Hackathon
   </h1>
@@ -347,7 +347,7 @@ function App() {
 <div className="flex flex-1" style={{ height: '66.67vh' }}>
         {/* Left pane */}
         <div 
-          className="flex-1 border-r border-gray-700/50 rounded-tl-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
+          className="flex-1 rounded-tl-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
           style={{ width: `${leftWidth}%` }}
         >
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
@@ -364,7 +364,6 @@ function App() {
         onChange={(e) => setTlZoom(parseFloat(e.target.value))}
         className="w-20"
       />
-      <span className="text-sm ml-2">{tlZoom}x</span>
     </div>
     <div 
       ref={tlSceneRef} 
@@ -385,7 +384,7 @@ function App() {
         
         {/* Right pane */}
 <div 
-  className="flex-1 border-l border-gray-700/50 rounded-tr-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
+  className="flex-1 rounded-tr-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
   style={{ width: `${100 - leftWidth}%` }}
 >
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
@@ -402,7 +401,6 @@ function App() {
         onChange={(e) => setTrZoom(parseFloat(e.target.value))}
         className="w-20"
       />
-      <span className="text-sm ml-2">{trZoom}x</span>
     </div>
     <div 
       ref={trSceneRef} 
@@ -416,7 +414,7 @@ function App() {
       
       {/* Horizontal splitter */}
       <div 
-        className="h-1.5 bg-gray-600/50 hover:bg-indigo-400/30 cursor-row-resize group"
+        className="h-1.5 hover:bg-indigo-400/30 cursor-row-resize group"
         onMouseDown={handleHorizontalDrag}
       >
         <div className="h-4 w-full -mt-1.5 bg-gray-700/0 group-hover:bg-indigo-300/50 transition-colors" />
@@ -424,7 +422,7 @@ function App() {
       
       {/* Bottom section (1/3 viewport height) */}
 <div 
-  className="flex-1 border-t border-gray-700/50 rounded-b-xl bg-gradient-to-tl from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group"
+  className="flex-1 rounded-b-xl bg-gradient-to-tl from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group"
   style={{ height: '33.33vh' }}
 >
   <div className="h-full p-6 text-white">
@@ -456,7 +454,7 @@ function App() {
         <span className="text-sm w-8">{speed}x</span>
       </div>
     </div>
-    <div className="mt-4 p-3 bg-indigo-900/30 rounded-lg border border-indigo-700/50">
+    <div className="mt-4 p-6 bg-indigo-900/30 rounded-lg">
       <p className="text-sm text-indigo-200 font-medium">
         The heliocentric view (left) shows the actual orbits of Earth and Mars around the Sun. 
         The geocentric view (right) shows how Mars appears to move from Earth's perspective, 
