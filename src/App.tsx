@@ -233,14 +233,14 @@ function App() {
   return (
 <div 
   ref={containerRef}
-  className="flex flex-col h-screen bg-slate-900 container mx-auto max-w-6xl"
+  className="flex flex-col h-screen container mx-auto max-w-6xl px-4"
 >
 
 <header className="text-center py-6 bg-gradient-to-b from-slate-800 to-slate-900 shadow-md rounded-t-xl border-b border-gray-700/50">
   <h1 className="text-4xl font-bold bg-clip-text bg-gradient-to-r from-indigo-300 to-purple-300 mb-2">
     Cerebras x Cline: $5,000 Vibe Coder Hackathon
   </h1>
-  <h2 className="text-2xl font-medium text-gray-700 tracking-wide">
+  <h2 className="text-2xl font-medium text-white tracking-wide">
     飞向天空的狮子
   </h2>
 </header>
@@ -251,7 +251,7 @@ function App() {
           className="flex-1 border-r border-gray-700/50 rounded-tl-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
           style={{ width: `${leftWidth}%` }}
         >
-          <div className="h-full flex flex-col items-center justify-center text-gray-200 font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
+          <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
             <h3 className="text-lg font-bold mb-2 text-white">Heliocentric View</h3>
             <p className="text-sm mb-4">Sun-centered view of planetary orbits</p>
             <div ref={tlSceneRef} className="w-full h-full" />
@@ -271,7 +271,7 @@ function App() {
   className="flex-1 border-l border-gray-700/50 rounded-tr-xl bg-gradient-to-br from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group relative"
   style={{ width: `${100 - leftWidth}%` }}
 >
-          <div className="h-full flex flex-col items-center justify-center text-gray-200 font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
+          <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
             <h3 className="text-lg font-bold mb-2 text-white">Geocentric View</h3>
             <p className="text-sm mb-4">Earth-centered view showing Mars retrograde</p>
             <div ref={trSceneRef} className="w-full h-full" />
@@ -292,7 +292,7 @@ function App() {
   className="flex-1 border-t border-gray-700/50 rounded-b-xl bg-gradient-to-tl from-slate-800 to-slate-900 shadow-sm hover:border-indigo-400/70 hover:shadow-lg hover:ring-1 hover:ring-indigo-400/20 transition-all duration-200 group"
   style={{ height: '33.33vh' }}
 >
-  <div className="h-full p-6 text-gray-200">
+  <div className="h-full p-6 text-white">
     <h2 className="text-xl font-bold mb-3 text-white flex items-center">
       <span className="inline-block w-2 h-2 bg-indigo-300 rounded-full mr-2" />
       Mars Retrograde Phenomenon
