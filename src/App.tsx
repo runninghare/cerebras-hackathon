@@ -94,9 +94,9 @@ function App() {
     trCamera.position.set(0, 25, 0);
     trCamera.lookAt(0, 0, 0);
 
-    // Store initial camera positions
-    const tlInitialPosition = tlCamera.position.clone();
-    const trInitialPosition = trCamera.position.clone();
+    // Store initial camera positions (commented out as they're not currently used)
+    // const tlInitialPosition = tlCamera.position.clone();
+    // const trInitialPosition = trCamera.position.clone();
 
     // Create orbit paths (rings) for heliocentric view
     const earthOrbitGeometry = new THREE.RingGeometry(10, 10.1, 64);
@@ -245,7 +245,8 @@ function App() {
   };
 
   // Handle mouse down for 3D scene rotation
-  const handleSceneMouseDown = (e: React.MouseEvent, scene: 'tl' | 'tr') => {
+  const handleSceneMouseDown = (e: React.MouseEvent, _scene: 'tl' | 'tr') => {
+    // _scene parameter is reserved for potential future scene-specific behavior
     e.preventDefault();
     setIsDragging(true);
     setDragStart({ x: e.clientX, y: e.clientY });
