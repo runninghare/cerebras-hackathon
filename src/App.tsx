@@ -10,6 +10,10 @@ function App() {
   const trSceneRef = useRef<HTMLDivElement>(null);
   const [isAnimating, setIsAnimating] = useState(true);
   const [speed, setSpeed] = useState(1);
+  const [tlRotation, setTlRotation] = useState({ x: 0, y: 0 });
+  const [trRotation, setTrRotation] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!tlSceneRef.current || !trSceneRef.current) return;
@@ -23,6 +27,9 @@ function App() {
     tlSceneRef.current.innerHTML = '';
     tlSceneRef.current.appendChild(tlRenderer.domElement);
 
+    // Store camera in window object for access by rotation effect
+    (window as any).tlCamera = tlCamera;
+
     // Geocentric view (TR)
     const trScene = new THREE.Scene();
     const trCamera = new THREE.PerspectiveCamera(75, trSceneRef.current.clientWidth / trSceneRef.current.clientHeight, 0.1, 1000);
@@ -31,6 +38,9 @@ function App() {
     trRenderer.setClearColor(0x000000, 0);
     trSceneRef.current.innerHTML = '';
     trSceneRef.current.appendChild(trRenderer.domElement);
+
+    // Store camera in window object for access by rotation effect
+    (window as any).trCamera = trCamera;
 
     // Create celestial bodies for heliocentric view
     const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
@@ -79,10 +89,14 @@ function App() {
     trScene.add(createStars());
 
     // Position cameras for top-down view
-    tlCamera.position.y = 25;
+    tlCamera.position.set(0, 25, 0);
     tlCamera.lookAt(0, 0, 0);
-    trCamera.position.y = 25;
+    trCamera.position.set(0, 25, 0);
     trCamera.lookAt(0, 0, 0);
+
+    // Store initial camera positions
+    const tlInitialPosition = tlCamera.position.clone();
+    const trInitialPosition = trCamera.position.clone();
 
     // Create orbit paths (rings) for heliocentric view
     const earthOrbitGeometry = new THREE.RingGeometry(10, 10.1, 64);
@@ -230,10 +244,92 @@ function App() {
     document.addEventListener('mouseup', onMouseUp);
   };
 
+  // Handle mouse down for 3D scene rotation
+  const handleSceneMouseDown = (e: React.MouseEvent, scene: 'tl' | 'tr') => {
+    e.preventDefault();
+    setIsDragging(true);
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  // Handle mouse move for 3D scene rotation
+  const handleSceneMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    
+    const deltaX = e.clientX - dragStart.x;
+    const deltaY = e.clientY - dragStart.y;
+    
+    setTlRotation(prev => ({ 
+      x: prev.x + deltaY * 0.01, 
+      y: prev.y + deltaX * 0.01 
+    }));
+    setTrRotation(prev => ({ 
+      x: prev.x + deltaY * 0.01, 
+      y: prev.y + deltaX * 0.01 
+    }));
+    
+    setDragStart({ x: e.clientX, y: e.clientY });
+  };
+
+  // Handle mouse up for 3D scene rotation
+  const handleSceneMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  // Clean up mouse events
+  useEffect(() => {
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+      }
+    };
+
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging]);
+
+  // Update camera positions based on rotation state
+  useEffect(() => {
+    if (!tlSceneRef.current || !trSceneRef.current) return;
+
+    // Find existing cameras in the scene
+    const tlRenderer = tlSceneRef.current.querySelector('canvas')?.parentElement;
+    const trRenderer = trSceneRef.current.querySelector('canvas')?.parentElement;
+    
+    if (!tlRenderer || !trRenderer) return;
+
+    // Update camera position based on rotation
+    const tlCamera = (window as any).tlCamera;
+    const trCamera = (window as any).trCamera;
+
+    if (tlCamera && trCamera) {
+      tlCamera.position.set(
+        25 * Math.sin(tlRotation.y) * Math.cos(tlRotation.x),
+        25 * Math.sin(tlRotation.x),
+        25 * Math.cos(tlRotation.y) * Math.cos(tlRotation.x)
+      );
+      tlCamera.lookAt(0, 0, 0);
+      tlCamera.up.set(0, 1, 0);
+
+      trCamera.position.set(
+        25 * Math.sin(trRotation.y) * Math.cos(trRotation.x),
+        25 * Math.sin(trRotation.x),
+        25 * Math.cos(trRotation.y) * Math.cos(trRotation.x)
+      );
+      trCamera.lookAt(0, 0, 0);
+      trCamera.up.set(0, 1, 0);
+    }
+
+  }, [tlRotation, trRotation, tlSceneRef, trSceneRef]);
+  
   return (
 <div 
   ref={containerRef}
-  className="flex flex-col h-screen container mx-auto max-w-6xl px-4"
+  className="flex flex-col h-screen max-w-6xl w-full mx-auto px-4"
+  style={{ maxWidth: '1024px' }}
+  onMouseMove={handleSceneMouseMove}
 >
 
 <header className="text-center py-6 bg-gradient-to-b from-slate-800 to-slate-900 shadow-md rounded-t-xl border-b border-gray-700/50">
@@ -254,7 +350,12 @@ function App() {
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
             <h3 className="text-lg font-bold mb-2 text-white">Heliocentric View</h3>
             <p className="text-sm mb-4">Sun-centered view of planetary orbits</p>
-            <div ref={tlSceneRef} className="w-full h-full" />
+            <div 
+              ref={tlSceneRef} 
+              className="w-full h-full cursor-grab active:cursor-grabbing"
+              onMouseDown={(e) => handleSceneMouseDown(e, 'tl')}
+              onMouseUp={handleSceneMouseUp}
+            />
           </div>
         </div>
         
@@ -274,7 +375,12 @@ function App() {
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
             <h3 className="text-lg font-bold mb-2 text-white">Geocentric View</h3>
             <p className="text-sm mb-4">Earth-centered view showing Mars retrograde</p>
-            <div ref={trSceneRef} className="w-full h-full" />
+            <div 
+              ref={trSceneRef} 
+              className="w-full h-full cursor-grab active:cursor-grabbing"
+              onMouseDown={(e) => handleSceneMouseDown(e, 'tr')}
+              onMouseUp={handleSceneMouseUp}
+            />
           </div>
         </div>
       </div>
