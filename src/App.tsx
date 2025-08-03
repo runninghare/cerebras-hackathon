@@ -85,13 +85,13 @@ function App() {
     trCamera.lookAt(0, 0, 0);
 
     // Create orbit paths (rings) for heliocentric view
-    const earthOrbitGeometry = new THREE.RingGeometry(5, 5.1, 64);
+    const earthOrbitGeometry = new THREE.RingGeometry(10, 10.1, 64);
     const earthOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0x0000ff, side: THREE.DoubleSide, opacity: 0.3, transparent: true });
     const earthOrbit = new THREE.Mesh(earthOrbitGeometry, earthOrbitMaterial);
     earthOrbit.rotation.x = Math.PI / 2;
     tlScene.add(earthOrbit);
 
-    const marsOrbitGeometry = new THREE.RingGeometry(8, 8.1, 64);
+    const marsOrbitGeometry = new THREE.RingGeometry(16, 16.1, 64);
     const marsOrbitMaterial = new THREE.MeshBasicMaterial({ color: 0xff4500, side: THREE.DoubleSide, opacity: 0.3, transparent: true });
     const marsOrbit = new THREE.Mesh(marsOrbitGeometry, marsOrbitMaterial);
     marsOrbit.rotation.x = Math.PI / 2;
@@ -115,11 +115,11 @@ function App() {
         marsAngle += (0.01 * speed) / 1.88; // Mars moves slower
 
         // Heliocentric positions
-        earth.position.x = Math.cos(earthAngle) * 5;
-        earth.position.z = Math.sin(earthAngle) * 5;
+        earth.position.x = Math.cos(earthAngle) * 10;
+        earth.position.z = Math.sin(earthAngle) * 10;
 
-        mars.position.x = Math.cos(marsAngle) * 8;
-        mars.position.z = Math.sin(marsAngle) * 8;
+        mars.position.x = Math.cos(marsAngle) * 16;
+        mars.position.z = Math.sin(marsAngle) * 16;
 
         // Geocentric view: position Mars relative to Earth
         const marsGeoX = mars.position.x - earth.position.x;
