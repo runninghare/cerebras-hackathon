@@ -14,6 +14,8 @@ function App() {
   const [trRotation, setTrRotation] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [tlZoom, setTlZoom] = useState(25);
+  const [trZoom, setTrZoom] = useState(25);
 
   useEffect(() => {
     if (!tlSceneRef.current || !trSceneRef.current) return;
@@ -291,7 +293,7 @@ function App() {
     };
   }, [isDragging]);
 
-  // Update camera positions based on rotation state
+  // Update camera positions based on rotation and zoom state
   useEffect(() => {
     if (!tlSceneRef.current || !trSceneRef.current) return;
 
@@ -301,29 +303,29 @@ function App() {
     
     if (!tlRenderer || !trRenderer) return;
 
-    // Update camera position based on rotation
+    // Update camera position based on rotation and zoom
     const tlCamera = (window as any).tlCamera;
     const trCamera = (window as any).trCamera;
 
     if (tlCamera && trCamera) {
       tlCamera.position.set(
-        25 * Math.sin(tlRotation.y) * Math.cos(tlRotation.x),
-        25 * Math.sin(tlRotation.x),
-        25 * Math.cos(tlRotation.y) * Math.cos(tlRotation.x)
+        tlZoom * Math.sin(tlRotation.y) * Math.cos(tlRotation.x),
+        tlZoom * Math.sin(tlRotation.x),
+        tlZoom * Math.cos(tlRotation.y) * Math.cos(tlRotation.x)
       );
       tlCamera.lookAt(0, 0, 0);
       tlCamera.up.set(0, 1, 0);
 
       trCamera.position.set(
-        25 * Math.sin(trRotation.y) * Math.cos(trRotation.x),
-        25 * Math.sin(trRotation.x),
-        25 * Math.cos(trRotation.y) * Math.cos(trRotation.x)
+        trZoom * Math.sin(trRotation.y) * Math.cos(trRotation.x),
+        trZoom * Math.sin(trRotation.x),
+        trZoom * Math.cos(trRotation.y) * Math.cos(trRotation.x)
       );
       trCamera.lookAt(0, 0, 0);
       trCamera.up.set(0, 1, 0);
     }
 
-  }, [tlRotation, trRotation, tlSceneRef, trSceneRef]);
+  }, [tlRotation, trRotation, tlZoom, trZoom, tlSceneRef, trSceneRef]);
   
   return (
 <div 
@@ -349,14 +351,27 @@ function App() {
           style={{ width: `${leftWidth}%` }}
         >
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
-            <h3 className="text-lg font-bold mb-2 text-white">Heliocentric View</h3>
-            <p className="text-sm mb-4">Sun-centered view of planetary orbits</p>
-            <div 
-              ref={tlSceneRef} 
-              className="w-full h-full cursor-grab active:cursor-grabbing"
-              onMouseDown={(e) => handleSceneMouseDown(e, 'tl')}
-              onMouseUp={handleSceneMouseUp}
-            />
+    <h3 className="text-lg font-bold mb-2 text-white">Heliocentric View</h3>
+    <p className="text-sm mb-4">Sun-centered view of planetary orbits</p>
+    <div className="text-sm mb-2 text-gray-400">
+      Zoom: 
+      <input 
+        type="range" 
+        min="10" 
+        max="50" 
+        step="1"
+        value={tlZoom}
+        onChange={(e) => setTlZoom(parseFloat(e.target.value))}
+        className="w-20"
+      />
+      <span className="text-sm ml-2">{tlZoom}x</span>
+    </div>
+    <div 
+      ref={tlSceneRef} 
+      className="w-full h-full cursor-grab active:cursor-grabbing"
+      onMouseDown={(e) => handleSceneMouseDown(e, 'tl')}
+      onMouseUp={handleSceneMouseUp}
+    />
           </div>
         </div>
         
@@ -374,14 +389,27 @@ function App() {
   style={{ width: `${100 - leftWidth}%` }}
 >
           <div className="h-full flex flex-col items-center justify-center text-white font-medium p-4 group-hover:text-indigo-300 transition-colors duration-200">
-            <h3 className="text-lg font-bold mb-2 text-white">Geocentric View</h3>
-            <p className="text-sm mb-4">Earth-centered view showing Mars retrograde</p>
-            <div 
-              ref={trSceneRef} 
-              className="w-full h-full cursor-grab active:cursor-grabbing"
-              onMouseDown={(e) => handleSceneMouseDown(e, 'tr')}
-              onMouseUp={handleSceneMouseUp}
-            />
+    <h3 className="text-lg font-bold mb-2 text-white">Geocentric View</h3>
+    <p className="text-sm mb-4">Earth-centered view showing Mars retrograde</p>
+    <div className="text-sm mb-2 text-gray-400">
+      Zoom: 
+      <input 
+        type="range" 
+        min="10" 
+        max="50" 
+        step="1"
+        value={trZoom}
+        onChange={(e) => setTrZoom(parseFloat(e.target.value))}
+        className="w-20"
+      />
+      <span className="text-sm ml-2">{trZoom}x</span>
+    </div>
+    <div 
+      ref={trSceneRef} 
+      className="w-full h-full cursor-grab active:cursor-grabbing"
+      onMouseDown={(e) => handleSceneMouseDown(e, 'tr')}
+      onMouseUp={handleSceneMouseUp}
+    />
           </div>
         </div>
       </div>
